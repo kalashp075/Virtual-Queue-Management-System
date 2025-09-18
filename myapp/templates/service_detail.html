@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Detail - {{ service.name }}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #333;
+    }
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #eaeaea;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 1rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    p.description {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #666;
+    }
+    .queues {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .queue {
+      flex: 1;
+      min-width: 220px;
+      border: 1px solid #eaeaea;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .queue h3 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #eaeaea;
+      padding-bottom: 0.5rem;
+    }
+    .queue ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .queue li {
+      padding: 0.5rem;
+      border-bottom: 1px solid #f2f2f2;
+      font-size: 0.9rem;
+    }
+    .queue li:last-child {
+      border-bottom: none;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    form {
+      margin: 0.5rem 0;
+      display: inline-block;
+    }
+    select, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #f5f5f5;
+    }
+    .back {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .back a {
+      text-decoration: none;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    .back a:hover {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Virtual Queue System</h1>
+    <nav>
+      <a href="{% url 'home_page' %}">Home</a>
+      <a href="{% url 'profile' %}">Profile</a>
+      <a href="{% url 'service_selection' %}">Services</a>
+      <a href="{% url 'logout' %}" onclick="return confirmLogout(event)">Logout</a>
+    </nav>
+  </header>
+
+
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="message {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+  <div class="container">
+    <h2>Service: {{ service.name }}</h2>
+    <p class="description">{{ service.description }}</p>
+    
+    <div class="queues">
+      <div class="queue">
+        <h3>Queue 1</h3>
+        <ul>
+          {% for entry in queue1 %}
+          <li>{{ entry.user.username }}{% if user_entry and user_entry.id == entry.id %} (You){% endif %}</li>
+          {% empty %}
+          <li>No one in queue</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="queue">
+        <h3>Queue 2</h3>
+        <ul>
+          {% for entry in queue2 %}
+          <li>{{ entry.user.username }}{% if user_entry and user_entry.id == entry.id %} (You){% endif %}</li>
+          {% empty %}
+          <li>No one in queue</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="queue">
+        <h3>Queue 3</h3>
+        <ul>
+          {% for entry in queue3 %}
+          <li>{{ entry.user.username }}{% if user_entry and user_entry.id == entry.id %} (You){% endif %}</li>
+          {% empty %}
+          <li>No one in queue</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    
+    <div class="controls">
+        {% if user_entry %}
+          <p>You are currently in <strong>{{ user_entry.get_queue_choice_display }}</strong>.</p>
+          
+          <!-- Leave Queue Form -->
+          <form method="post" action="{% url 'leave_queue' service.id %}" onsubmit="return confirmAction(event, 'Are you sure you want to leave the queue?')">
+            {% csrf_token %}
+            <button type="submit">Leave Queue</button>
+          </form>
+      
+          <!-- Change Queue Form -->
+          <form method="post" action="{% url 'join_queue' service.id %}" onsubmit="return confirmAction(event, 'Are you sure you want to change the queue?')">
+            {% csrf_token %}
+            <select name="queue_choice">
+              <option value="1" {% if user_entry.queue_choice == 1 %}selected{% endif %}>Queue 1</option>
+              <option value="2" {% if user_entry.queue_choice == 2 %}selected{% endif %}>Queue 2</option>
+              <option value="3" {% if user_entry.queue_choice == 3 %}selected{% endif %}>Queue 3</option>
+            </select>
+            <button type="submit">Change Queue</button>
+          </form>
+        
+        {% else %}
+          <!-- Join Queue Form -->
+          <form method="post" action="{% url 'join_queue' service.id %}" onsubmit="return confirmAction(event, 'Are you sure you want to join the queue?')">
+            {% csrf_token %}
+            <select name="queue_choice">
+              <option value="">Select Queue</option>
+              <option value="1">Queue 1</option>
+              <option value="2">Queue 2</option>
+              <option value="3">Queue 3</option>
+            </select>
+            <button type="submit">Join Queue</button>
+          </form>
+        {% endif %}
+      </div>
+      
+      <div id="success-message" style="display:none; text-align:center; color:green; font-weight:bold;">
+        Action completed successfully. A confirmation email has been sent.
+      </div>
+    
+
+  <script>
+    function confirmLogout(event) {
+        event.preventDefault();  // Prevent the default link behavior
+        let userConfirmed = confirm("Are you sure you want to log out?");
+        if (userConfirmed) {
+            window.location.href = event.target.href;  // Redirect if confirmed
+        }
+    }
+
+    function confirmAction(event, message) {
+        if (!confirm(message)) {
+          event.preventDefault();
+          return false;
+        }
+    
+        // Display success message after form submission
+        event.target.addEventListener('submit', function () {
+          document.getElementById('success-message').style.display = 'block';
+        });
+    
+        return true;
+      }
+</script>
+</body>
+</html>

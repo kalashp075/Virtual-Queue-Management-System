@@ -1,0 +1,42 @@
+# Django/Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.db
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.env
+*.venv
+venv/
+env/
+ENV/
+*.egg-info/
+*.egg
+*.bak
+*.swp
+*.swo
+
+# Migrations
+myapp/migrations/__pycache__/
+myapp/migrations/*.pyc
+myapp/migrations/*.pyo
+myapp/migrations/*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Static/Media
+staticfiles/
+media/
+
+# VS Code
+.vscode/
+
+# Other
+*.~
+
+myproject/settings.py

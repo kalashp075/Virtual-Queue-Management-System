@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'mystyle.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h2>Verify your email</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="verification_text">
+                <p>We sent an email to <span id ="verification_email">{{email}}.</span><br>Check the email for a verification code.</p>
+            </div>
+                
+            <form action="{% url 'verification' %}" method="POST">
+                {% csrf_token %}
+                <div class="floating-label">
+                    <input type="text" id="input" name="input"  required autofocus aria-label="Verification Code">
+                    <label for="input">Verification Code</label>
+                </div>  
+                
+                <input type="submit" name="submit" id="submit" value="Verify">
+            </form>
+
+            <div class="resend">
+                <a href="{% url 'resend_verification' %}">Resend email</a>
+            </div>
+        </div>
+    </div>    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Select all alert elements
+            const alerts = document.querySelectorAll('.alert');
+        
+            // Iterate through each alert
+            alerts.forEach(function (alert) {
+                // Show the alert (simulate fade-in)
+                alert.style.transition = "opacity 0.5s";
+                alert.style.opacity = "1";
+        
+                // Hide the alert after a delay
+                setTimeout(function () {
+                    alert.style.opacity = "0"; // Fade-out effect
+        
+                    // Remove the alert from the DOM after fading out
+                    setTimeout(function () {
+                        alert.remove();
+                    }, 500); // Match the fade-out duration
+                }, 3000); // Delay before fade-out
+            });
+        });
+        
+    </script>   
+</body>
+</html>

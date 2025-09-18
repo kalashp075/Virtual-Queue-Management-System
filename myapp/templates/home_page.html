@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #eaeaea;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 1rem;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .content {
+      max-width: 600px;
+      width: 100%;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: #333;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background-color 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Virtual Queue System</h1>
+    <nav>
+      <a href="{% url 'home_page' %}">Home</a>
+      <a href="{% url 'profile' %}">Profile</a>
+      <a href="{% url 'service_selection' %}">Services</a>
+      <a href="{% url 'logout' %}" onclick="return confirmLogout(event)">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="content">
+      <h2>Welcome, {{ request.user.username }}!</h2>
+      {% if user_entry %}
+        <div class="alert alert-info" role="alert">
+          You are currently in <strong>{{ user_entry.get_queue_choice_display }}</strong>.
+        </div>
+      {% endif %}
+      <p>Select a service to join a queue.</p>
+      <a class="btn" href="{% url 'service_selection' %}">Select a Service</a>
+    </div>
+  </div>
+
+  <script>
+    function confirmLogout(event) {
+        event.preventDefault();  // Prevent the default link behavior
+        let userConfirmed = confirm("Are you sure you want to log out?");
+        if (userConfirmed) {
+            window.location.href = event.target.href;  // Redirect if confirmed
+        }
+    }
+  </script>
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

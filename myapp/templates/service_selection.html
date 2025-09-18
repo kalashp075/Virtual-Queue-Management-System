@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Selection - Virtual Queue System</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #333;
+    }
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #eaeaea;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 1rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .card {
+      background-color: #fff;
+      border: 1px solid #eaeaea;
+      border-radius: 8px;
+      padding: 1.5rem;
+      width: 250px;
+      text-align: center;
+      transition: box-shadow 0.2s ease;
+    }
+    .card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      color: #666;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: #333;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background-color 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #f5f5f5;
+    }
+    .back {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .back a {
+      text-decoration: none;
+      color: #333;
+      border: 1px solid #ccc;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    .back a:hover {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Virtual Queue System</h1>
+    <nav>
+      <a href="{% url 'home_page' %}">Home</a>
+      <a href="{% url 'profile' %}">Profile</a>
+      <a href="{% url 'logout' %}" onclick="return confirmLogout(event)">Logout</a>
+    </nav>
+  </header>
+  <div class="container">
+    <h2>Select a Service</h2>
+    <div class="cards">
+      {% for service in services %}
+      <div class="card">
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        <a class="btn" href="{% url 'service_detail' service.id %}">Join Queue</a>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="back">
+      <a href="javascript:history.back()">Back</a>
+    </div>
+  </div>
+
+  <script>
+    function confirmLogout(event) {
+        event.preventDefault();  // Prevent the default link behavior
+        let userConfirmed = confirm("Are you sure you want to log out?");
+        if (userConfirmed) {
+            window.location.href = event.target.href;  // Redirect if confirmed
+        }
+    }
+</script>
+</body>
+</html>
